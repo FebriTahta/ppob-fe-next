@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ppob-fe-next
 
-## Getting Started
+Storefront & panel admin PPOB — Next.js 16 (App Router, Cache Components, Partial Prefetching), shadcn/ui (Radix, preset Nova), Tailwind CSS v4, TanStack Query, Zustand, React Hook Form + Zod.
 
-First, run the development server:
+## Menjalankan
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.example .env.local   # API_URL=http://localhost:8080
+npm install
+npm run dev                  # http://localhost:3000
+npm run build && npm start   # produksi (output: standalone)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Browser hanya berbicara dengan origin Next.js: `/api/v1/*` dan `/uploads/*` di-rewrite ke Go API, sehingga cookie auth (`ppob_token`, httpOnly) tetap first-party.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Arsitektur
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+  app/
+    (store)/            storefront: beranda, game/[slug], games, cart, checkout, invoice/[invoice], track, faq, membership, account
+    (auth)/             login, register
+    admin/              dashboard & seluruh modul admin
+  components/
+    ui/                 primitif shadcn/ui
+    layout/             header, nav, footer, background tema, floating contact, theme style
+    home/ product/ cart/ checkout/ invoice/ account/ auth/   micro-component per fitur
+    admin/              blok generik: SchemaForm, CrudPage, DataTable, FormDialog, ImageUpload, editor khusus
+    shared/             Price, GameArt, StatusBadge, CountdownTimer, QuantityStepper, …
+  lib/
+    api/server.ts       fetcher server ber-'use cache' + cacheTag (settings, katalog, banner, flash sale, FAQ)
+    api/client.ts       fetch client bertipe + ApiError
+    actions.ts          server action revalidateStorefront (updateTag, hanya admin)
+    types.ts constants.ts format.ts color.ts
+  stores/               keranjang & pesanan terakhir (Zustand persist)
+  hooks/                useAuth, useCountdown, useDebounce, useMounted
+  proxy.ts              gate optimistik /account & /admin (otorisasi sebenarnya di API)
+```
 
-## Learn More
+### Prinsip
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Micro-component**: setiap bagian UI kecil & fokus (mis. `ProductOption`, `PurchaseSummary`, `CouponInput`, `PaymentMethodPicker`, `StatusTimeline`).
+- **Server-first & ringan**: data publik dirender di server dan di-cache (`cacheLife('minutes')` + tag). Saat admin menyimpan perubahan, `updateTag` langsung memperbarui storefront.
+- **Harga oleh server**: guest melihat harga publik dari cache; user member/reseller otomatis mendapat harga levelnya (refetch di client); checkout selalu memakai `/checkout/quote`.
+- **Admin deklaratif**: modul admin didefinisikan sebagai konfigurasi kolom + field (`CrudPage`), sehingga konsisten dan mudah ditambah.
+- **Tema runtime**: warna brand/aksen/radius dari pengaturan admin di-inject sebagai CSS variable di server (tanpa flash), latar gambar atau efek CSS.
+- Aksesibilitas: label form, `aria-*`, fokus terlihat, `prefers-reduced-motion`.
