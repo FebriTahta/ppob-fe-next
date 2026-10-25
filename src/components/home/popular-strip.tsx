@@ -15,7 +15,8 @@ export function PopularStrip({ categories }: { categories: Category[] }) {
           <Link
             key={c.id}
             href={`/game/${c.slug}`}
-            className="glass group flex w-64 shrink-0 snap-start items-center gap-3 rounded-2xl p-2.5 transition-all hover:glow"
+            className="glass group flex w-64 shrink-0 snap-start items-center gap-3 rounded-2xl p-2.5 transition-all stagger-in hover:glow"
+            style={{ "--i": i } as React.CSSProperties}
           >
             <div className="relative size-14 shrink-0 overflow-hidden rounded-xl">
               <GameArt name={c.name} src={c.image_url} textClassName="text-lg" />

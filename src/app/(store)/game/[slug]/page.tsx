@@ -33,7 +33,8 @@ async function GameContent({ params }: Pick<PageProps<"/game/[slug]">, "params">
   if (!category) notFound();
 
   return (
-    <div className="space-y-5">
+    // Subgrid over main's tracks so the hero can span edge to edge while the rest stays centred.
+    <div className="col-span-full! grid grid-cols-subgrid gap-y-5 *:col-start-2 *:min-w-0">
       <GameHero category={category} />
       <Suspense fallback={<PanelSkeleton />}>
         <PurchasePanel initial={category} />
@@ -54,8 +55,8 @@ function PanelSkeleton() {
 
 function GameSkeleton() {
   return (
-    <div className="space-y-5">
-      <Skeleton className="h-48 rounded-3xl" />
+    <div className="col-span-full! grid grid-cols-subgrid gap-y-5 *:col-start-2 *:min-w-0">
+      <Skeleton className="col-span-full! -mt-4 h-72 rounded-none sm:h-[25rem] lg:h-[29rem]" />
       <PanelSkeleton />
     </div>
   );

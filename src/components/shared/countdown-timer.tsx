@@ -5,10 +5,10 @@ import { cn } from "@/lib/utils";
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
-type Props = { endsAt: string; className?: string; compact?: boolean; onDone?: React.ReactNode };
+type Props = { endsAt: string; className?: string; compact?: boolean; labeled?: boolean; onDone?: React.ReactNode };
 
 /** Segmented countdown (HH:MM:SS, with days when needed). */
-export function CountdownTimer({ endsAt, className, compact, onDone }: Props) {
+export function CountdownTimer({ endsAt, className, compact, labeled, onDone }: Props) {
   const c = useCountdown(endsAt);
   if (c?.done && onDone) return <>{onDone}</>;
   const parts = c
@@ -24,6 +24,7 @@ export function CountdownTimer({ endsAt, className, compact, onDone }: Props) {
         <div key={p.l} className="flex items-center gap-1">
           <div className="grid min-w-9 place-items-center rounded-md bg-foreground px-1.5 py-1 font-mono text-sm font-bold text-background tabular-nums">
             {c ? pad(p.v) : "--"}
+            {labeled && <span className="font-sans text-[9px] font-medium leading-none opacity-70">{p.l}</span>}
           </div>
           {i < parts.length - 1 && <span className="font-bold text-foreground/60">:</span>}
         </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { Lock } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
@@ -10,8 +11,8 @@ import { api } from "@/lib/api/client";
 import { MULTI_QTY_TYPES, UNIQUE_LISTING_TYPES } from "@/lib/constants";
 import type { CategoryDetail, PublicProduct } from "@/lib/types";
 import { useCart } from "@/stores/cart-store";
-import { RankIcon } from "@/components/shared/rank-icon";
 import { CustomerFields, validateCustomerData } from "./customer-fields";
+import { FlashDeals } from "./flash-deals";
 import { ProductPicker } from "./product-picker";
 import { PurchaseSummary } from "./purchase-summary";
 import { StepCard } from "./step-card";
@@ -103,6 +104,7 @@ export function PurchasePanel({ initial }: { initial: CategoryDetail }) {
   return (
     <div className="grid gap-5 lg:grid-cols-[1fr_340px]">
       <div className="space-y-5 pb-36 lg:pb-0">
+        <FlashDeals products={category.products} selectedId={selectedId} onSelect={select} />
         {hasFields && (
           <div id="step-account">
             <StepCard step={step++} title="Masukkan Data Akun" description="Pastikan data yang dimasukkan sudah benar">
@@ -124,30 +126,12 @@ export function PurchasePanel({ initial }: { initial: CategoryDetail }) {
           description={user?.membership ? `Harga khusus ${user.membership.name} aktif` : undefined}
         >
           <ProductPicker products={category.products} selectedId={selectedId} onSelect={select} unique={unique} />
-          {unique && selected && (selected.character_detail || selected.description || selected.rank) && (
-            <div className="mt-4 grid gap-3 sm:grid-cols-2">
-              {selected.character_detail && (
-                <div className="rounded-xl border bg-card/50 p-4">
-                  {selected.rank && (
-                    <div className="mb-3 flex items-center gap-2.5">
-                      <RankIcon rank={selected.rank} className="size-10" />
-                      <div>
-                        <p className="text-[11px] text-muted-foreground">Pangkat</p>
-                        <p className="text-sm font-semibold text-amber-600 dark:text-amber-400">{selected.rank.name}</p>
-                      </div>
-                    </div>
-                  )}
-                  <p className="mb-1.5 text-xs font-semibold tracking-wide text-muted-foreground uppercase">Detail karakter</p>
-                  <p className="text-sm leading-relaxed whitespace-pre-line">{selected.character_detail}</p>
-                </div>
-              )}
-              {selected.description && (
-                <div className="rounded-xl border bg-card/50 p-4">
-                  <p className="mb-1.5 text-xs font-semibold tracking-wide text-muted-foreground uppercase">Detail produk</p>
-                  <p className="text-sm leading-relaxed whitespace-pre-line">{selected.description}</p>
-                </div>
-              )}
-            </div>
+          {unique && (
+            // The character's login is never public; the admin hands it over once the order is paid.
+            <p className="mt-3 flex items-center gap-1.5 text-xs text-muted-foreground">
+              <Lock className="size-3.5 shrink-0" />
+              Data login karakter dikirim admin setelah pembayaran berhasil.
+            </p>
           )}
           {selected?.is_preorder && selected.preorder_note && (
             <p className="mt-3 rounded-lg bg-amber-500/10 px-3 py-2 text-xs text-amber-600 dark:text-amber-400">

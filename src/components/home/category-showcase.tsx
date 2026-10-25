@@ -38,7 +38,7 @@ export function CategoryShowcase({ categories }: { categories: Category[] }) {
           </button>
         ))}
       </div>
-      <GameGrid categories={shown} />
+      <GameGrid key={tab} categories={shown} />
     </section>
   );
 }

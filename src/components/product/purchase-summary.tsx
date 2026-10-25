@@ -18,12 +18,27 @@ type Props = {
 /** Selected product summary with CTAs — a sticky card on desktop, a bottom bar on mobile. */
 export function PurchaseSummary({ product, qty, memberLabel, onAddToCart, onBuyNow, variant }: Props) {
   const total = product ? product.price * qty : 0;
+  // flex-1/flex-[2] only share width in the bar's row; in the card's column they would set a 0 height basis.
+  const row = variant === "bar";
   const actions = (
-    <div className={cn("flex gap-2", variant === "card" && "flex-col")}>
-      <Button type="button" variant="outline" size="lg" className="h-11 flex-1" disabled={!product} onClick={onAddToCart}>
-        <ShoppingCart /> <span className={cn(variant === "bar" && "sr-only sm:not-sr-only")}>Keranjang</span>
+    <div className={cn("flex gap-2", !row && "flex-col gap-2.5")}>
+      <Button
+        type="button"
+        variant="outline"
+        size="lg"
+        className={cn("h-12 rounded-xl text-base font-semibold [&_svg:not([class*='size-'])]:size-5", row && "flex-1")}
+        disabled={!product}
+        onClick={onAddToCart}
+      >
+        <ShoppingCart /> <span className={cn(row && "sr-only sm:not-sr-only")}>Keranjang</span>
       </Button>
-      <Button type="button" size="lg" className="h-11 flex-[2] bg-brand-gradient text-white glow" disabled={!product} onClick={onBuyNow}>
+      <Button
+        type="button"
+        size="lg"
+        className={cn("h-12 rounded-xl bg-brand-gradient text-base font-semibold text-white glow [&_svg:not([class*='size-'])]:size-5", row && "flex-[2]")}
+        disabled={!product}
+        onClick={onBuyNow}
+      >
         <Zap className="fill-current" /> Beli Sekarang
       </Button>
     </div>
@@ -52,7 +67,7 @@ export function PurchaseSummary({ product, qty, memberLabel, onAddToCart, onBuyN
           {memberLabel && <Row label="Harga" value={<span className="text-primary">{memberLabel}</span>} />}
           <div className="flex items-center justify-between border-t pt-3">
             <dt className="text-muted-foreground">Total</dt>
-            <dd className="font-heading text-xl font-bold text-gradient">{formatRupiah(total)}</dd>
+            <dd className="font-heading text-xl font-bold tabular-nums">{formatRupiah(total)}</dd>
           </div>
         </dl>
       ) : (

@@ -57,8 +57,6 @@ export type PublicProduct = {
   is_preorder: boolean;
   preorder_note: string;
   badge: string;
-  /** Unique listings (Point Blank characters) only. */
-  character_detail?: string;
   rank?: { name: string; image_url: string };
   flash_sale?: FlashInfo;
 };
@@ -72,6 +70,9 @@ export type FlashItem = {
   category_name: string;
   category_slug: string;
   category_image: string;
+  /** Optional until every API instance serves them. */
+  category_type?: CategoryType;
+  product_image?: string;
   price: number;
   regular_price: number;
   quota: number;

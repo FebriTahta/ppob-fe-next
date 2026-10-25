@@ -8,7 +8,7 @@ type Props = { site: SiteSettings; contact: ContactSettings; year: number };
 
 export function SiteFooter({ site, contact, year }: Props) {
   return (
-    <footer className="mt-20 border-t border-border/60 pb-28 sm:pb-0">
+    <footer className="liquid-glass mt-20 rounded-t-[2rem] border-b-0 pb-28 sm:pb-0">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 md:grid-cols-[1.4fr_1fr_1fr]">
         <div className="space-y-4">
           <BrandLogo site={site} className="[&>span:last-child]:inline" />

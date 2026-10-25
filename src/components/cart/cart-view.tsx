@@ -50,7 +50,7 @@ export function CartView() {
         <div className="glass sticky top-20 space-y-4 rounded-2xl p-5">
           <div className="flex items-center justify-between">
             <span className="text-muted-foreground">Estimasi total</span>
-            <span className="font-heading text-xl font-bold text-gradient">{formatRupiah(total)}</span>
+            <span className="font-heading text-xl font-bold tabular-nums">{formatRupiah(total)}</span>
           </div>
           <p className="text-xs text-muted-foreground">Harga final, diskon kupon & biaya pembayaran dihitung di halaman checkout.</p>
           <Button asChild size="lg" className="h-11 w-full bg-brand-gradient text-white glow">

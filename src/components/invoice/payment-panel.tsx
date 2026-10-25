@@ -32,7 +32,7 @@ export function PaymentPanel({ order }: { order: Order }) {
         <div>
           <p className="text-xs text-muted-foreground">Total pembayaran</p>
           <div className="flex items-center gap-1">
-            <p className="font-heading text-3xl font-bold text-gradient">{formatRupiah(order.total)}</p>
+            <p className="font-heading text-3xl font-bold tabular-nums">{formatRupiah(order.total)}</p>
             <CopyButton value={String(order.total)} label="Nominal disalin" />
           </div>
           <p className="text-xs text-muted-foreground">via {order.payment_method}</p>

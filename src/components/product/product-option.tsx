@@ -6,7 +6,7 @@ import { RankIcon } from "@/components/shared/rank-icon";
 
 type Props = { product: PublicProduct; selected: boolean; onSelect: () => void; unique?: boolean };
 
-/** Selectable product tile (nominal / item). Point Blank character listings also show a short character summary. */
+/** Selectable product tile (nominal / item). Point Blank character listings also show the character's full description. */
 export function ProductOption({ product: p, selected, onSelect, unique }: Props) {
   const soldOut = p.stock !== null && p.stock <= 0;
   const crossed = Math.max(p.regular_price, p.strike_price);
@@ -53,8 +53,8 @@ export function ProductOption({ product: p, selected, onSelect, unique }: Props)
       ) : (
         <span className="pr-10 text-sm font-semibold leading-tight">{p.name}</span>
       )}
-      {unique && p.character_detail && (
-        <span className="line-clamp-2 text-[11px] whitespace-pre-line text-muted-foreground">{p.character_detail}</span>
+      {unique && p.description && (
+        <p className="text-xs leading-relaxed whitespace-pre-line text-muted-foreground">{p.description}</p>
       )}
       <div className="mt-auto">
         {pct > 0 && (

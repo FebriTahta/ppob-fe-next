@@ -10,7 +10,7 @@ export function OrderTotals({ quote }: { quote?: Quote }) {
       <Row label="Biaya pembayaran" value={quote.payment_method ? formatRupiah(quote.fee) : "-"} />
       <div className="flex items-center justify-between border-t pt-3">
         <dt className="font-medium">Total Bayar</dt>
-        <dd className="font-heading text-2xl font-bold text-gradient">{formatRupiah(quote.total)}</dd>
+        <dd className="font-heading text-2xl font-bold tabular-nums">{formatRupiah(quote.total)}</dd>
       </div>
     </dl>
   );
